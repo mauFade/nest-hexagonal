@@ -20,7 +20,7 @@ import { ListGatewayHttp } from './gateways/list-gateway-http';
     ListGatewaySequelize,
     ListGatewayHttp,
     { provide: 'ListPersistenceGateway', useExisting: ListGatewaySequelize },
-    { provide: 'ListIntegrationGateway', useExisting: ListGatewaySequelize },
+    { provide: 'ListIntegrationGateway', useExisting: ListGatewayHttp },
   ],
 })
 export class ListsModule {}

@@ -15,5 +15,6 @@ describe('ListsService', () => {
     const list = await service.create({ name: 'test' });
 
     expect(listPersistenceGateway.items).toEqual([list]);
+    expect(listIntegrationGateway.items).toEqual([list]);
   });
 });
