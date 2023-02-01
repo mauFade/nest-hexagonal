@@ -1,6 +1,4 @@
-import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
 import { CreateListDto } from './dto/create-list.dto';
 import { List } from './entities/list.entity';
 import { ListGatewayInterface } from './gateways/list-gateway-interface';
@@ -8,31 +6,27 @@ import { ListGatewayInterface } from './gateways/list-gateway-interface';
 @Injectable()
 export class ListsService {
   constructor(
-    @Inject('ListGatewayInterface')
-    private listGateway: ListGatewayInterface,
-    private httpService: HttpService,
+    @Inject('ListPersistenceGateway')
+    private listPersistenceGateway: ListGatewayInterface,
+    @Inject('ListIntegrationGateway')
+    private listIntegrationGateway: ListGatewayInterface,
   ) {}
 
   public async create({ name }: CreateListDto) {
     const list = new List(name);
 
-    const data = await this.listGateway.create(list);
+    await this.listPersistenceGateway.create(list);
+    await this.listIntegrationGateway.create(list);
 
-    await lastValueFrom(
-      this.httpService.post('lists', {
-        name: data.name,
-      }),
-    );
-
-    return data;
+    return list;
   }
 
   public async findAll() {
-    return await this.listGateway.find();
+    return await this.listPersistenceGateway.find();
   }
 
   public async findOne(id: number) {
-    const list = await this.listGateway.findOne(id);
+    const list = await this.listPersistenceGateway.findOne(id);
 
     if (!list) {
       throw new Error('List not found.');

@@ -5,6 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ListModel } from './entities/list.model';
 import { HttpModule } from '@nestjs/axios';
 import { ListGatewaySequelize } from './gateways/list-gateway-sequelize';
+import { ListGatewayHttp } from './gateways/list-gateway-http';
 
 @Module({
   imports: [
@@ -17,7 +18,9 @@ import { ListGatewaySequelize } from './gateways/list-gateway-sequelize';
   providers: [
     ListsService,
     ListGatewaySequelize,
-    { provide: ListGatewaySequelize, useExisting: ListGatewaySequelize },
+    ListGatewayHttp,
+    { provide: 'ListPersistenceGateway', useExisting: ListGatewaySequelize },
+    { provide: 'ListIntegrationGateway', useExisting: ListGatewaySequelize },
   ],
 })
 export class ListsModule {}
