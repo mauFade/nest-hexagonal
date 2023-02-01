@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { CreateListDto } from './dto/create-list.dto';
 import { List } from './entities/list.entity';
@@ -8,6 +8,7 @@ import { ListGatewayInterface } from './gateways/list-gateway-interface';
 @Injectable()
 export class ListsService {
   constructor(
+    @Inject('ListGatewayInterface')
     private listGateway: ListGatewayInterface,
     private httpService: HttpService,
   ) {}

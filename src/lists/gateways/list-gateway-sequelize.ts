@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { List } from '../entities/list.entity';
 import { ListModel } from '../entities/list.model';
 import { ListGatewayInterface } from './list-gateway-interface';
 
+@Injectable()
 export class ListGatewaySequelize implements ListGatewayInterface {
   constructor(
     @InjectModel(ListModel)
