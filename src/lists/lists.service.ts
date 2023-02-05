@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
+import EventEmitter from 'events';
 import { CreateListDto } from './dto/create-list.dto';
 import { List } from './entities/list.entity';
+import { ListCreatedEvent } from './events/list-created.event';
 import { ListGatewayInterface } from './gateways/list-gateway-interface';
 
 @Injectable()
@@ -8,15 +10,15 @@ export class ListsService {
   constructor(
     @Inject('ListPersistenceGateway')
     private listPersistenceGateway: ListGatewayInterface,
-    @Inject('ListIntegrationGateway')
-    private listIntegrationGateway: ListGatewayInterface,
+    private eventEmitter: EventEmitter,
   ) {}
 
   public async create({ name }: CreateListDto) {
     const list = new List(name);
 
     await this.listPersistenceGateway.create(list);
-    await this.listIntegrationGateway.create(list);
+    // Emite o evento
+    this.eventEmitter.emit('list.created', new ListCreatedEvent(list));
 
     return list;
   }
