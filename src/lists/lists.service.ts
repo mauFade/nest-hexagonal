@@ -10,6 +10,7 @@ export class ListsService {
   constructor(
     @Inject('ListPersistenceGateway')
     private listPersistenceGateway: ListGatewayInterface,
+    @Inject('EventEmitter')
     private eventEmitter: EventEmitter,
   ) {}
 
